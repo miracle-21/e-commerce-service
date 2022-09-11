@@ -1,0 +1,6 @@
+bcrypt==4.0.0
+Django==4.0.5
+django-cors-headers==3.13.0
+mysqlclient==2.1.1
+PyMySQL==1.0.2
+sqlparse==0.4.2
