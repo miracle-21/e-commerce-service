@@ -1,4 +1,3 @@
-from turtle import setx
 from django.db import models
 
 from core.models import TimeStampModel
