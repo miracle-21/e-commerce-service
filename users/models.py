@@ -9,7 +9,7 @@ class User(TimeStampModel):
     address = models.CharField(max_length = 300)
     phone   = models.CharField(max_length = 20, null = True, unique = True)
     sex     = models.BooleanField()
-    role    = models.BooleanField()
+    role    = models.BooleanField(default=True)
 
     class Meta():
         db_table = 'users'
