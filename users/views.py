@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.views import View
 from django.conf import settings
+from django.db.models import Q
 
 from core.validation import *
 from users.models    import User
@@ -59,3 +60,29 @@ class SignInView(View):
 
         except User.DoesNotExist:
             return JsonResponse({'message' : '존재하지 않는 회원입니다'}, status = 401)
+
+class UserView(View):
+    '''
+    회원 정보 조회 기능
+    TO DO: 조회 권한 추가 예정
+    '''
+    def get(self, request):
+        search = request.GET.get('search')
+
+        q = Q()
+
+        if search:
+            q &= Q(name__contains = search) | Q(address__contains = search) | Q(sex__contains = search)
+
+        users = User.objects.filter(q)
+
+        results = [
+            {
+                'user_id' : user.id,
+                'name' : user.name,
+                'address' : user.address,
+                'phone' : user.phone,
+                'sex' : user.sex
+            } for user in users
+        ]
+        return JsonResponse({'results' : results}, status = 200)
