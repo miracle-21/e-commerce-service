@@ -15,9 +15,9 @@ def token_user(func):
             return func(self, request, *args, **kwargs)
 
         except jwt.exceptions.DecodeError:
-            return JsonResponse({'message' : 'Invalid Token'}, status=401)
+            return JsonResponse({'message' : '회원 정보 불일치'}, status=401)
 
         except User.DoesNotExist:
-            return JsonResponse({'message' : 'Invalid User'}, status=401)
+            return JsonResponse({'message' : '존재하지 않는 회원입니다'}, status=401)
 
     return wrapper
