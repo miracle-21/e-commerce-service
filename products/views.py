@@ -1,12 +1,11 @@
 import json
 
-from django.http            import JsonResponse
-from django.views           import View
-from django.conf            import settings
-from django.db.models       import Q
+from django.http      import JsonResponse
+from django.views     import View
+from django.db.models import Q
 
 from core.token      import token_user
-from products.models    import *
+from products.models import *
 
 class ProductView(View):
     @token_user
@@ -18,35 +17,35 @@ class ProductView(View):
             if request.user.role == False:
                 data = json.loads(request.body)
 
-                name = data['name']
-                made = data['made']
-                main_img = data['main_img']
-                detail_img = data['detail_img']
-                detail_name = data['detail_name']
-                price = data['price']
-                count = data['count']
+                name            = data['name']
+                made            = data['made']
+                main_img        = data['main_img']
+                detail_img      = data['detail_img']
+                detail_name     = data['detail_name']
+                price           = data['price']
+                count           = data['count']
                 delivery_mothod = data['delivery_mothod'] if 'delivery_mothod' in data.keys() else None
                 delivery_charge = data['delivery_charge'] if 'delivery_charge' in data.keys() else None
-                delivery_info = data['delivery_info'] if 'delivery_info' in data.keys() else None
+                delivery_info   = data['delivery_info'] if 'delivery_info' in data.keys() else None
 
                 make = Product.objects.create(
-                    name = name,
-                    made = made,
+                    name            = name,
+                    made            = made,
                     delivery_mothod = delivery_mothod,
                     delivery_charge = delivery_charge,
-                    delivery_info = delivery_info
+                    delivery_info   = delivery_info
                 )
 
                 ProductImage.objects.create(
-                    main_img = main_img,
+                    main_img   = main_img,
                     detail_img = detail_img,
                     product_id = make.id
                 )
 
                 ProductDetail.objects.create(
-                    name = detail_name,
-                    price = price,
-                    count = count,
+                    name       = detail_name,
+                    price      = price,
+                    count      = count,
                     product_id = make.id
                 )
                 return JsonResponse({'message' :'상품 등록 완료'}, status = 201)
@@ -103,15 +102,15 @@ class ProductView(View):
                 product = Product.objects.get(id=id)
 
                 if 'name' in data.keys():
-                    product.name  = data['name']
+                    product.name = data['name']
                 if 'made' in data.keys():
-                    product.made    = data['made']
+                    product.made = data['made']
                 if 'delivery_mothod' in data.keys():
-                    product.delivery_mothod  = data['delivery_mothod']
+                    product.delivery_mothod = data['delivery_mothod']
                 if 'delivery_charge' in data.keys():
-                    product.delivery_charge    = data['delivery_charge']
+                    product.delivery_charge = data['delivery_charge']
                 if 'delivery_info' in data.keys():
-                    product.delivery_info    = data['delivery_info']
+                    product.delivery_info = data['delivery_info']
                 if 'main_img' in data.keys():
                     product.productimage_set.get(product_id=id).main_img = data['main_img']
                 if 'detail_img' in data.keys():

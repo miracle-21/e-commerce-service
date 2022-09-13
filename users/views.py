@@ -68,32 +68,35 @@ class UserView(View):
         '''
         기능: 기본적으로 일반 회원 정보를 조회할 수 있지만, role=False 로 검색하면 관리자 정보를 조회할 수 있다.
         '''
-        if request.user.role == False:
-            search = request.GET.get('search')
-            role   = request.GET.get('role', True)
+        try:
+            if request.user.role == False:
+                search = request.GET.get('search')
+                role   = request.GET.get('role', True)
 
-            q = Q()
+                q = Q()
 
-            # 이름, 주소, 성별, 권한(False, True) 검색 기능
-            if search:
-                q &= Q(name__contains = search) | Q(address__contains = search) | Q(sex__contains = search)
-            
+                # 이름, 주소, 성별, 권한(False, True) 검색 기능
+                if search:
+                    q &= Q(name__contains = search) | Q(address__contains = search) | Q(sex__contains = search)
+                
 
-            users = User.objects.filter(q).filter(role = role)
+                users = User.objects.filter(q).filter(role = role)
 
-            results = [
-                {
-                    'user_id' : user.id,
-                    'name' : user.name,
-                    'address' : user.address,
-                    'phone' : user.phone,
-                    'sex' : "남" if user.sex == False else "여",
-                    'role' : "관리자" if user.role == False else "일반회원",
-                } for user in users
-            ]
-            return JsonResponse({'results' : results}, status = 200)
-        else:
-            return JsonResponse({'message' : '조회 권한이 없습니다'}, status = 401)
+                results = [
+                    {
+                        'user_id' : user.id,
+                        'name' : user.name,
+                        'address' : user.address,
+                        'phone' : user.phone,
+                        'sex' : "남" if user.sex == False else "여",
+                        'role' : "관리자" if user.role == False else "일반회원",
+                    } for user in users
+                ]
+                return JsonResponse({'results' : results}, status = 200)
+            else:
+                return JsonResponse({'message' : '조회 권한이 없습니다'}, status = 401)
+        except ValidationError:
+            return JsonResponse({'message' : '검색 오류'}, status = 400)
 
     @token_user
     def patch(self, request, id):
