@@ -7,8 +7,8 @@ class Product(TimeStampModel):
     made            = models.CharField(max_length = 100)
     delivery_mothod = models.CharField(max_length = 100, null = True)
     delivery_charge = models.DecimalField(max_digits = 13, decimal_places = 2, null = True)
-    delivery_info   = models.IntegerField(null = True)
-
+    delivery_info   = models.CharField(max_length = 100, null = True)
+    
     class Meta():
         db_table = 'products'
 
