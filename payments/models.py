@@ -8,6 +8,7 @@ class Payment(TimeStampModel):
     user    = models.ForeignKey(User, on_delete = models.CASCADE)
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
     price   = models.DecimalField(max_digits = 13, decimal_places = 2)
+    count   = models.IntegerField()
     orderer = models.CharField(max_length = 200)
     phone   = models.CharField(max_length = 20)
     address = models.CharField(max_length = 300)
