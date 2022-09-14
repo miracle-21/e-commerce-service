@@ -4,4 +4,5 @@ from payments.views import *
 
 urlpatterns = [
     path('/<int:product_id>', PaymentView.as_view()),
+    path('', PaymentView.as_view()),
 ]

@@ -5,19 +5,13 @@ from users.models    import User
 from products.models import Product
 
 class Payment(TimeStampModel):
-    STATUS = (
-        ('1', '결제완료'),
-        ('2', '배송준비중'),
-        ('3', '배송중'),
-        ('4', '배송완료')
-    )
     user    = models.ForeignKey(User, on_delete = models.CASCADE)
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
     price   = models.DecimalField(max_digits = 13, decimal_places = 2)
     orderer = models.CharField(max_length = 200)
     phone   = models.CharField(max_length = 20)
     address = models.CharField(max_length = 300)
-    status  = models.CharField(max_length = 10, choices = STATUS) 
+    status  = models.CharField(max_length = 10) 
 
     class Meta():
         db_table = 'payments'
