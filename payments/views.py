@@ -89,6 +89,7 @@ class PaymentView(View):
         
         results = [
             {
+                'id' : payment.id,
                 'user_id' : payment.user_id,
                 'product_id' : payment.product_id,
                 'product_name' : ProductDetail.objects.get(product_id=payment.product_id).name,
@@ -102,3 +103,39 @@ class PaymentView(View):
         ]
         return JsonResponse({'results' : results}, status = 200)
 
+    @token_user
+    def patch(self, request, user_id, payment_id):
+        '''
+        결제 내역 수정
+        '''
+        try:
+            data = json.loads(request.body)
+            payment = Payment.objects.filter(user_id=user_id).get(id=payment_id)
+
+            if payment.user_id == request.user.id:
+                if 'orderer' in data.keys():
+                    payment.orderer = data['orderer']
+                if 'phone' in data.keys():
+                    payment.phone = data['phone']
+                if 'address' in data.keys():
+                    payment.address = data['address']
+
+                payment.save()
+                return JsonResponse({'message' : '수정 완료'}, status = 200)
+
+            elif request.user.role == False:
+                if 'orderer' in data.keys():
+                    payment.orderer = data['orderer']
+                if 'phone' in data.keys():
+                    payment.phone = data['phone']
+                if 'address' in data.keys():
+                    payment.address = data['address']
+                if 'status' in data.keys():
+                    payment.status = data['status']
+
+                payment.save()
+                return JsonResponse({'message' : '수정 완료'}, status = 200)
+            else:
+                return JsonResponse({'message' : '수정 권한이 없습니다'}, status = 400)
+        except json.decoder.JSONDecodeError:
+            return JsonResponse({'message' : '수정 사항이 없습니다'}, status = 400)
