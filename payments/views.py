@@ -42,6 +42,7 @@ class PaymentView(View):
                     user_id = user.id,
                     product_id = product_id,
                     price = total_price,
+                    count = count,
                     orderer = orderer,
                     phone = phone,
                     address = address,
@@ -62,11 +63,10 @@ class PaymentView(View):
     def get(self, request):
         '''
         결제 내역 조회
-        관리자: 전체 회원 내역 조회 가능, 검색 기능 사용 가능.
         일반회원: 본인 결제 내역만 조회 가능. 검색 기능 사용 가능.
+        관리자: 전체 회원 내역 조회 가능, 검색 기능 사용 가능.
         '''
         address = request.GET.get('address')
-
 
         q = Q()
 
@@ -74,11 +74,13 @@ class PaymentView(View):
             q &= Q(address__contains = address)
         
         FILTER_SET = {
+            'user' : 'user__name',
             'product' : 'product',
             'phone' : 'phone',
             'status' : 'status',
             }
 
+        # 회원 이름, 주문상품명, 주문전화번호, 주문상태로 검색 가능
         filter = { FILTER_SET.get(key) : value for key, value in request.GET.items() if FILTER_SET.get(key) }
         
         if request.user.role == False:
@@ -93,6 +95,7 @@ class PaymentView(View):
                 'user_id' : payment.user_id,
                 'product_id' : payment.product_id,
                 'product_name' : ProductDetail.objects.get(product_id=payment.product_id).name,
+                'count' : int(payment.count),
                 'price' : int(payment.price),
                 'user_name' : User.objects.get(id=payment.user_id).name,
                 'orderer' : payment.orderer,
@@ -107,6 +110,8 @@ class PaymentView(View):
     def patch(self, request, user_id, payment_id):
         '''
         결제 내역 수정
+        일반회원: 본인 결제 내역만 수정 가능.
+        관리자: 모든 결제 내역 수정 가능.
         '''
         try:
             data = json.loads(request.body)
@@ -139,3 +144,37 @@ class PaymentView(View):
                 return JsonResponse({'message' : '수정 권한이 없습니다'}, status = 400)
         except json.decoder.JSONDecodeError:
             return JsonResponse({'message' : '수정 사항이 없습니다'}, status = 400)
+        except Payment.DoesNotExist:
+            return JsonResponse({'message' : '수정 오류'}, status = 400)
+
+    @token_user
+    def delete(self, request, user_id, payment_id):
+        '''
+        결제 취소 기능
+        '''
+        try:
+            user = User.objects.get(id=request.user.id)
+            payment = Payment.objects.filter(user_id=user_id).get(id=payment_id)
+            item = ProductDetail.objects.get(product_id=payment.product_id)
+
+            if payment.user_id == request.user.id and payment.status == "결제완료":
+                user.credit += payment.price
+                item.count += payment.count
+                
+                user.save()
+                item.save()
+                payment.delete()
+
+            elif request.user.role == False:
+                user.credit += payment.price
+                item.count += int(payment.count)
+                
+                user.save()
+                item.save()
+                payment.delete()
+
+                return JsonResponse({'message' : '결제 취소 완료'}, status = 200)
+            else:
+                return JsonResponse({'message' : '취소가 불가능한 상태입니다'}, status = 401)
+        except Payment.DoesNotExist:
+            return JsonResponse({'message' : '존재하지 않는 결제 내역입니다'}, status = 400)
