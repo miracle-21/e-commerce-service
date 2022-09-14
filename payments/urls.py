@@ -3,5 +3,5 @@ from django.urls import path
 from payments.views import *
 
 urlpatterns = [
-
+    path('/<int:product_id>', PaymentView.as_view()),
 ]

@@ -10,6 +10,7 @@ class User(TimeStampModel):
     phone   = models.CharField(max_length = 20, null = True, unique = True)
     sex     = models.BooleanField()
     role    = models.BooleanField(default=True)
+    credit  = models.DecimalField(max_digits = 13, decimal_places = 2, default=0)
 
     class Meta():
         db_table = 'users'
