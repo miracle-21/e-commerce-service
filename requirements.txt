@@ -5,3 +5,4 @@ mysqlclient==2.1.1
 PyMySQL==1.0.2
 sqlparse==0.4.2
 PyJWT==2.4.0
+iamport-rest-client==0.9.0

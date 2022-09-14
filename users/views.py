@@ -90,6 +90,7 @@ class UserView(View):
                         'phone' : user.phone,
                         'sex' : "남" if user.sex == False else "여",
                         'role' : "관리자" if user.role == False else "일반회원",
+                        'credit' : int(user.credit)
                     } for user in users
                 ]
                 return JsonResponse({'results' : results}, status = 200)
