@@ -57,6 +57,8 @@ Language | Framework | Database | HTTP | Tools
 ![](https://velog.velcdn.com/images/miracle-21/post/0127e91f-0643-4834-8c6b-053638804288/image.png)
 
 
-## 🔖 API 명세서
-- postman API 링크
+## 🔖 참조 문서
+- [postman API 링크](https://documenter.getpostman.com/view/18832289/2s7YYvaMyV)
 
+- Trello
+![](https://velog.velcdn.com/images/miracle-21/post/687aa9a9-0272-4858-b43c-469cb2d8783f/image.gif)
