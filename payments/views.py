@@ -151,6 +151,8 @@ class PaymentView(View):
     def delete(self, request, user_id, payment_id):
         '''
         결제 취소 기능
+        일반회원: 결제완료 상태일 때만 취소 가능.
+        관리자: 모든 회원에 대한 결제 취소 가능.
         '''
         try:
             user = User.objects.get(id=request.user.id)

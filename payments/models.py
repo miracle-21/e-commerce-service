@@ -4,6 +4,7 @@ from core.models     import TimeStampModel
 from users.models    import User
 from products.models import Product
 
+# 결제 정보 테이블
 class Payment(TimeStampModel):
     user    = models.ForeignKey(User, on_delete = models.CASCADE)
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
@@ -17,6 +18,7 @@ class Payment(TimeStampModel):
     class Meta():
         db_table = 'payments'
 
+# 장바구니 테이블
 class Cart(TimeStampModel):
     user    = models.ForeignKey(User, on_delete = models.CASCADE)
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
@@ -26,12 +28,14 @@ class Cart(TimeStampModel):
     class Meta():
         db_table = 'cart'
 
+# 찜 테이블
 class Like(TimeStampModel):
     user    = models.ForeignKey(User, on_delete = models.CASCADE)
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
     class Meta():
         db_table = 'like'
 
+# 리뷰 테이블
 class Review(TimeStampModel):
     user    = models.ForeignKey(User, on_delete = models.CASCADE)
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
@@ -40,6 +44,7 @@ class Review(TimeStampModel):
     class Meta():
         db_table = 'reviews'
 
+# 리뷰 이미지 테이블
 class ReviewImage(TimeStampModel):
     user    = models.ForeignKey(User, on_delete = models.CASCADE)
     product = models.ForeignKey(Product, on_delete = models.CASCADE)

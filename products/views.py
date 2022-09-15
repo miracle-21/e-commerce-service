@@ -11,7 +11,8 @@ class ProductView(View):
     @token_user
     def post(self, request):
         '''
-        TO DO: 아직 이미지를 2개 이상 올릴 수 없다. 
+        상품 등록 기능
+        NOTICE: 아직 이미지를 2개 이상 올릴 수 없다. 
         '''
         try:
             if request.user.role == False:
@@ -56,8 +57,8 @@ class ProductView(View):
 
     def get(self, request):
         '''
-        기능: 메인 페이지. id 값을 입력하면 상세 페이지로 사용할 수 있다.
-        TO DO: 아직 이미지를 2개 이상 올릴 수 없다. 
+        메인 페이지.
+        TIP: id 값을 입력하면 상세 페이지로 사용할 수 있다.
         '''
         search = request.GET.get('search')
         
@@ -96,6 +97,9 @@ class ProductView(View):
 
     @token_user
     def patch(self, request, id):
+        '''
+        등록상품 수정 기능
+        '''
         try:
             if request.user.role == False:
                 data = json.loads(request.body)
@@ -133,6 +137,9 @@ class ProductView(View):
 
     @token_user
     def delete(self, request, id):
+        '''
+        등록상품 삭제 기능
+        '''
         try:
             product = Product.objects.get(id=id)
 
