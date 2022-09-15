@@ -14,6 +14,9 @@ from users.models    import User
 
 class SignUpView(View):
     def post(self, request):
+        '''
+        회원 가입 기능
+        '''
         try:
             data = json.loads(request.body)
 
@@ -27,6 +30,7 @@ class SignUpView(View):
             if User.objects.filter(email=email).exists():
                 return JsonResponse({'message' : '이미 존재하는 회원입니다'}, status=409)
 
+            # 이메일, 비빌먼호, 핸드폰번호는 유효성검사를 통과해야한다.
             validate_email(email)
             validate_passwd(passwd)
             validate_phone(phone)
@@ -47,6 +51,9 @@ class SignUpView(View):
 
 class SignInView(View):
     def get(self, request):
+        '''
+        로그인 기능
+        '''
         try:
             data = json.loads(request.body)
             
@@ -66,7 +73,8 @@ class UserView(View):
     @token_user
     def get(self, request):
         '''
-        기능: 기본적으로 일반 회원 정보를 조회할 수 있지만, role=False 로 검색하면 관리자 정보를 조회할 수 있다.
+        일반 회원 정보를 조회 기능
+        TIP: role=False 로 검색하면 관리자 정보를 조회할 수 있다.
         '''
         try:
             if request.user.role == False:
@@ -102,7 +110,8 @@ class UserView(View):
     @token_user
     def patch(self, request, id):
         '''
-        기능: 회원 정보 수정. 관리자/일반회원 별로 수정 권한이 다르다.
+        회원 정보 수정
+        관리자/일반회원 별로 수정 권한이 다르다.
         '''
         user = User.objects.get(id=id)
 
@@ -137,7 +146,7 @@ class UserView(View):
     @token_user
     def delete(self, request, id):
         '''
-        기능: 본인 가입 정보만 탈퇴할 수 있다.
+        본인 가입 정보만 탈퇴할 수 있다.
         '''
         user = User.objects.get(id=id)
 
