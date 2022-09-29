@@ -60,5 +60,5 @@ Language | Framework | Database | HTTP | Tools
 ## 🔖 참조 문서
 - [postman API 링크](https://documenter.getpostman.com/view/18832289/2s7YYvaMyV)
 
-- Trello
+- [Trello 링크](https://trello.com/invite/b/SHbmrXXT/abc2161468cbb2d1a2c0225f815355cd/shopping-service)
 ![](https://velog.velcdn.com/images/miracle-21/post/687aa9a9-0272-4858-b43c-469cb2d8783f/image.gif)
