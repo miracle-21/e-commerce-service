@@ -12,6 +12,7 @@ class ProductView(View):
     def post(self, request):
         '''
         상품 등록 기능
+        TIP: 배송 방법의 기본값은 택배, 배송비 기본값은 0이다.
         NOTICE: 아직 이미지를 2개 이상 올릴 수 없다. 
         '''
         try:
@@ -25,8 +26,8 @@ class ProductView(View):
                 detail_name     = data['detail_name']
                 price           = data['price']
                 count           = data['count']
-                delivery_mothod = data['delivery_mothod'] if 'delivery_mothod' in data.keys() else None
-                delivery_charge = data['delivery_charge'] if 'delivery_charge' in data.keys() else None
+                delivery_mothod = data['delivery_mothod'] if 'delivery_mothod' in data.keys() else "택배"
+                delivery_charge = data['delivery_charge'] if 'delivery_charge' in data.keys() else 0
                 delivery_info   = data['delivery_info'] if 'delivery_info' in data.keys() else None
 
                 make = Product.objects.create(
